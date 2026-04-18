@@ -1,7 +1,3 @@
-// /pages/api/getupdatelog.js
-
-// In-memory storage for changelogs (note: this will reset on server restart)
-// For production, consider using a database or file-based storage
 let changelogStorage = new Map();
 
 function compareSkins(oldSkin, newSkin, skinName) {
@@ -71,7 +67,7 @@ export default async function handler(req, res) {
     if (!oldResponse.ok) throw new Error(`Old data failed: ${oldResponse.status}`);
     const oldData = await oldResponse.json();
     
-    console.log(`📊 Live: ${liveData.length}, Old: ${oldData.length}`);
+    console.log(`Live: ${liveData.length}, Old: ${oldData.length}`);
     
     // Create maps
     const oldMap = new Map(oldData.map(s => [s['Skin Name'], s]));
@@ -95,7 +91,7 @@ export default async function handler(req, res) {
       }
     }
     
-    console.log(`📝 Found ${newChanges.length} change(s)`);
+    console.log(`${newChanges.length} change(s)`);
     
     // Process each change and save to memory storage
     const savedChanges = [];
@@ -116,7 +112,7 @@ export default async function handler(req, res) {
       if (!existingChange) {
         // Save to memory storage
         changelogStorage.set(change.skinName, changeData);
-        console.log(`💾 Saved change: ${change.skinName}`);
+        console.log(`${change.skinName}`);
         savedChanges.push(changeData);
       } else {
         // Check if changes are different from previously saved
@@ -127,9 +123,9 @@ export default async function handler(req, res) {
             ...changeData,
             previousDetectedAt: existingChange.detectedAt
           });
-          console.log(`🔄 Updated existing change: ${change.skinName}`);
+          console.log(`${change.skinName}`);
         } else {
-          console.log(`⏭️ No new changes for: ${change.skinName}`);
+          console.log(`${change.skinName}`);
         }
       }
     }
